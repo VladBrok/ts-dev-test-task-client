@@ -6,7 +6,7 @@
     </div>
     <template #fallback>
       <div class="fullscreen row justify-center items-center">
-        <q-spinner color="primary" size="5em" />
+        <q-spinner color="primary" size="5em" :thickness="3" />
       </div>
     </template>
   </Suspense>
