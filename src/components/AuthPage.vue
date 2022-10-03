@@ -110,25 +110,15 @@ export default defineComponent({
         'Пароль должен содержать латинскую букву в нижнем регистре';
       const containsNumber = (val: string) =>
         /[0-9]/.test(val) || 'Пароль должен содержать число';
-
-      const special = '#?!@$%^&*-';
-      const displaySpecial = special.split('').join(' ');
-      const specialRegex = new RegExp(`[${special}]`);
-      const containsSpecial = (val: string) =>
-        specialRegex.test(val) ||
-        `Пароль должен содержать один из следующих символов: ${displaySpecial}`;
-
-      const allowed = new RegExp(`^[A-Za-z0-9${special}]+$`);
       const containsOnlyAllowed = (val: string) =>
-        allowed.test(val) ||
-        `Пароль может содержать только латинские буквы, цифры, и один из символов: ${displaySpecial}`;
+        /^[A-Za-z0-9]+$/.test(val) ||
+        'Пароль может содержать только цифры и латинские буквы';
 
       return [
         longEnough,
         containsUppercase,
         containsLowercase,
         containsNumber,
-        containsSpecial,
         containsOnlyAllowed,
       ];
     },
