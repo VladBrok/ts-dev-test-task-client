@@ -58,6 +58,7 @@ export default defineComponent({
       isLoading: false,
     };
   },
+
   props: {
     name: {
       type: String,
@@ -76,13 +77,18 @@ export default defineComponent({
       required: true,
     },
   },
+
   methods: {
     onSubmit() {
       this.isLoading = true;
       console.log(this.email, this.password);
-      setTimeout(() => (this.isLoading = false), 3000);
+      setTimeout(() => {
+        this.isLoading = false;
+        this.$router.push('/profile');
+      }, 1500);
     },
   },
+
   computed: {
     getEmailRules() {
       const notEmpty = (val: string) =>
