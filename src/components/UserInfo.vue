@@ -11,7 +11,7 @@
       <p>{{ phoneNumber }}</p>
 
       <p class="label">Адрес:</p>
-      <p>{{ address }}</p>
+      <p style="white-space: pre-wrap">{{ address }}</p>
 
       <p class="label">Информация о себе:</p>
       <p>{{ info }}</p>
@@ -37,7 +37,7 @@ export default defineComponent({
       name: 'Влад',
       phoneNumber: '+383838383',
       address:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa ex, consequuntur ullam assumenda provident culpa voluptatem',
+        'Definitionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn and Usage. The word-wrap property allows long words to be able to be broken and wrap onto the next line. Show demo . Default value: normal. Inherited: yes. Animatable: no. Read about animatable.',
       info: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa ex, consequuntur ullam assumenda provident culpa voluptatem adipisci veritatis, itaque officiis aperiam enim aliquam dolore veniam quam molestias doloribus, accusamus similique?',
     };
   },
@@ -53,7 +53,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
 .grid {
   display: grid;
   grid-template-columns: max-content 1fr;
@@ -67,5 +67,6 @@ export default defineComponent({
 
 .container {
   margin-left: 4rem;
+  overflow-wrap: anywhere;
 }
 </style>
