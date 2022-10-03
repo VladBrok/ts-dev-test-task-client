@@ -1,5 +1,5 @@
 <template>
-  <div class="q-mx-auto" style="max-width: 17rem">
+  <div class="q-mx-auto" style="max-width: 18rem">
     <header><h1 class="q-py-sm text-h5 text-center">Регистрация</h1></header>
 
     <main>
@@ -9,17 +9,17 @@
           type="email"
           label="Email:"
           lazy-rules
-          :rules="emailRules"
+          :rules="getEmailRules"
         />
         <q-input
           v-model="password"
           type="password"
           label="Пароль:"
           lazy-rules
-          :rules="passwordRules"
+          :rules="getPasswordRules"
         />
 
-        <div>
+        <div class="q-my-lg">
           <q-btn
             :loading="isLoading"
             label="Регистрация"
@@ -49,8 +49,6 @@ export default defineComponent({
       email: '',
       password: '',
       isLoading: false,
-      minPwdLength: 6,
-      maxPwdLength: 10,
     };
   },
   methods: {
@@ -61,27 +59,52 @@ export default defineComponent({
     },
   },
   computed: {
-    emailRules() {
-      return [
-        (val: string) => !!val || 'Пожалуйста, введите адрес электронной почты',
-        (
-          val: string,
-          rules: Record<
-            EmbeddedValidationRule,
-            EmbeddedValidationRuleFn<string>
-          >
-        ) =>
-          rules.email(val) ||
-          'Пожалуйста, введите корректный адрес электронной почты',
-      ];
+    getEmailRules() {
+      const notEmpty = (val: string) =>
+        !!val || 'Пожалуйста, введите адрес электронной почты';
+      const isEmail = (
+        val: string,
+        rules: Record<EmbeddedValidationRule, EmbeddedValidationRuleFn<string>>
+      ) =>
+        rules.email(val) ||
+        'Пожалуйста, введите корректный адрес электронной почты';
+
+      return [notEmpty, isEmail];
     },
-    passwordRules() {
+    getPasswordRules() {
+      const min = 6;
+      const max = 16;
+      const longEnough = (val: string) =>
+        (val && val.length >= min && val.length <= max) ||
+        `Пароль должен содержать от ${min} до ${max} символов`;
+      const containsUppercase = (val: string) =>
+        /[A-Z]/.test(val) ||
+        'Пароль должен содержать латинскую букву в верхнем регистре';
+      const containsLowercase = (val: string) =>
+        /[a-z]/.test(val) ||
+        'Пароль должен содержать латинскую букву в нижнем регистре';
+      const containsNumber = (val: string) =>
+        /[0-9]/.test(val) || 'Пароль должен содержать число';
+
+      const special = '#?!@$%^&*-';
+      const displaySpecial = special.split('').join(' ');
+      const specialRegex = new RegExp(`[${special}]`);
+      const containsSpecial = (val: string) =>
+        specialRegex.test(val) ||
+        `Пароль должен содержать один из следующих символов: ${displaySpecial}`;
+
+      const allowed = new RegExp(`^[A-Za-z0-9${special}]+$`);
+      const containsOnlyAllowed = (val: string) =>
+        allowed.test(val) ||
+        `Пароль может содержать только латинские буквы, цифры, и один из символов: ${displaySpecial}`;
+
       return [
-        (val: string) =>
-          (val &&
-            val.length >= this.minPwdLength &&
-            val.length <= this.maxPwdLength) ||
-          `Пароль должен содержать от ${this.minPwdLength} до ${this.maxPwdLength} символов`,
+        longEnough,
+        containsUppercase,
+        containsLowercase,
+        containsNumber,
+        containsSpecial,
+        containsOnlyAllowed,
       ];
     },
   },
