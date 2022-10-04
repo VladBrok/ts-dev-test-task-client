@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { EmbeddedValidationRule, EmbeddedValidationRuleFn } from 'quasar';
+import { getEmailRules, getPasswordRules } from 'src/lib/rules';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -88,44 +88,8 @@ export default defineComponent({
   },
 
   computed: {
-    getEmailRules() {
-      const notEmpty = (val: string) =>
-        !!val || 'Пожалуйста, введите адрес электронной почты';
-      const isEmail = (
-        val: string,
-        rules: Record<EmbeddedValidationRule, EmbeddedValidationRuleFn<string>>
-      ) =>
-        rules.email(val) ||
-        'Пожалуйста, введите корректный адрес электронной почты';
-
-      return [notEmpty, isEmail];
-    },
-    getPasswordRules() {
-      const min = 6;
-      const max = 16;
-      const longEnough = (val: string) =>
-        (val && val.length >= min && val.length <= max) ||
-        `Пароль должен содержать от ${min} до ${max} символов`;
-      const containsUppercase = (val: string) =>
-        /[A-Z]/.test(val) ||
-        'Пароль должен содержать латинскую букву в верхнем регистре';
-      const containsLowercase = (val: string) =>
-        /[a-z]/.test(val) ||
-        'Пароль должен содержать латинскую букву в нижнем регистре';
-      const containsNumber = (val: string) =>
-        /[0-9]/.test(val) || 'Пароль должен содержать число';
-      const containsOnlyAllowed = (val: string) =>
-        /^[A-Za-z0-9]+$/.test(val) ||
-        'Пароль может содержать только цифры и латинские буквы';
-
-      return [
-        longEnough,
-        containsUppercase,
-        containsLowercase,
-        containsNumber,
-        containsOnlyAllowed,
-      ];
-    },
+    getEmailRules,
+    getPasswordRules: getPasswordRules({ isRequired: true }),
   },
 });
 </script>
