@@ -10,17 +10,21 @@
       <p class="label">Телефон:</p>
       <p>{{ phoneNumber }}</p>
 
+      <p class="label">Email:</p>
+      <p>{{ email }}</p>
+
       <p class="label">Адрес:</p>
-      <p style="white-space: pre-wrap">{{ address }}</p>
+      <p>{{ address }}</p>
 
       <p class="label">Информация о себе:</p>
       <p>{{ info }}</p>
     </div>
+
+    <div class="row q-gutter-xl items-center justify-center q-py-lg">
+      <q-btn label="Выход" color="negative" @click="onExit" />
+      <q-btn label="Редактировать" color="primary" @click="onEdit" />
+    </div>
   </main>
-  <div class="column q-gutter-md items-center q-mt-sm">
-    <q-btn label="Редактировать" color="primary" @click="onEdit" />
-    <q-btn label="Выход" color="negative" @click="onExit" />
-  </div>
 </template>
 
 <script lang="ts">
@@ -29,6 +33,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'UserInfo',
   async setup() {
+    // fixme: dup
     await new Promise((res, rej) => {
       setTimeout(() => res(''), 1500);
     });
@@ -36,6 +41,7 @@ export default defineComponent({
     return {
       name: 'Влад',
       phoneNumber: '+383838383',
+      email: 'vlad@brok.com',
       address:
         'Definitionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn and Usage. The word-wrap property allows long words to be able to be broken and wrap onto the next line. Show demo . Default value: normal. Inherited: yes. Animatable: no. Read about animatable.',
       info: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa ex, consequuntur ullam assumenda provident culpa voluptatem adipisci veritatis, itaque officiis aperiam enim aliquam dolore veniam quam molestias doloribus, accusamus similique?',
@@ -53,7 +59,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style>
 .grid {
   display: grid;
   grid-template-columns: max-content 1fr;
