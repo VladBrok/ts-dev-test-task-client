@@ -1,23 +1,17 @@
 <!-- todo: protect the page -->
 <template>
-  <Suspense>
-    <div class="q-mx-auto" style="max-width: 30rem">
-      <user-info />
-    </div>
-    <template #fallback>
-      <div class="fullscreen row justify-center items-center">
-        <q-spinner color="primary" size="5em" :thickness="3" />
-      </div>
-    </template>
-  </Suspense>
+  <custom-suspense>
+    <user-info />
+  </custom-suspense>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import UserInfo from '../components/UserInfo.vue';
+import CustomSuspense from '../components/CustomSuspense.vue';
 
 export default defineComponent({
   name: 'ProfilePage',
-  components: { UserInfo },
+  components: { UserInfo, CustomSuspense },
 });
 </script>
