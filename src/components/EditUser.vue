@@ -52,7 +52,6 @@
 </template>
 
 <script lang="ts">
-import { info } from 'console';
 import {
   getAddressRules,
   getEmailRules,
