@@ -52,6 +52,7 @@ export function getEmailRules() {
 
 export function getPhoneNumberRules() {
   const validFormat = (val: string) =>
+    !val ||
     /^[+7]\d{10}$/.test(val) ||
     'Телефон должен начинаться с +7 и содержать 10 цифр';
 
@@ -59,16 +60,16 @@ export function getPhoneNumberRules() {
 }
 
 export function getAddressRules() {
-  return [];
-}
+  const max = 120;
+  const longEnough = (val: string) =>
+    val.length <= max || `Максимальное число символов: ${max}`;
 
-export function getInfoRules() {
-  return [];
+  return [longEnough];
 }
 
 export function getNameRules() {
   const withoutSpecial = (val: string) =>
-    !/[!@#$%^&*()+=-\[\]\\;,"'{}.<>:?|\/]/.test(val) ||
+    !/[!@#$%^&*()+=-\[\]\\;,"'{}.<>:?|\/№]/.test(val) ||
     'Имя не должно содержать специальные символы';
 
   const max = 30;
@@ -76,4 +77,12 @@ export function getNameRules() {
     val.length <= max || `Максимальная длина имени: ${max} символов`;
 
   return [withoutSpecial, longEnough];
+}
+
+export function getInfoRules() {
+  const max = 200;
+  const longEnough = (val: string) =>
+    val.length <= max || `Максимальное число символов: ${max}`;
+
+  return [longEnough];
 }
