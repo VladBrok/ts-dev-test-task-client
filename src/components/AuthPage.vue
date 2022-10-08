@@ -7,12 +7,14 @@
     <main>
       <q-form @submit="onSubmit" class="q-gutter-sm" novalidate>
         <q-input
+          lazy-rules
           v-model.trim="email"
           type="email"
           label="Email:"
           :rules="getEmailRules"
         />
         <q-input
+          lazy-rules
           v-model.trim="password"
           type="password"
           label="Пароль:"

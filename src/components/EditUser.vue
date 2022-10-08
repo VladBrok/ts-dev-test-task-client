@@ -3,12 +3,14 @@
     <main class="q-mt-lg">
       <q-form @submit="onSubmit" class="q-gutter-md" novalidate>
         <q-input
+          lazy-rules
           v-model.trim="name"
           type="text"
           label="Имя:"
           :rules="getNameRules"
         />
         <q-input
+          lazy-rules
           v-model.trim="phoneNumber"
           type="text"
           label="Телефон:"
@@ -16,24 +18,28 @@
           hint="Пример: +74440002200"
         />
         <q-input
+          lazy-rules
           v-model.trim="email"
           type="email"
           label="Email:"
           :rules="getEmailRules"
         />
         <q-input
+          lazy-rules
           v-model.trim="password"
           type="password"
           label="Новый пароль:"
           :rules="getPasswordRules"
         />
         <q-input
+          lazy-rules
           v-model.trim="address"
           type="text"
           label="Адрес:"
           :rules="getAddressRules"
         />
         <q-input
+          lazy-rules
           v-model.trim="info"
           type="textarea"
           label="Информация о себе:"
