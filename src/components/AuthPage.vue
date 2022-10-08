@@ -49,19 +49,28 @@
 import { getEmailRules, getPasswordRules } from 'src/lib/rules';
 import { defineComponent } from 'vue';
 
+const events = {
+  submit: 'submit',
+};
+
 export default defineComponent({
   name: 'AuthPage',
   data() {
     return {
       email: '',
       password: '',
-      isLoading: false,
     };
   },
+
+  emits: [events.submit],
 
   props: {
     name: {
       type: String,
+      required: true,
+    },
+    isLoading: {
+      type: Boolean,
       required: true,
     },
     alternativeText: {
@@ -80,12 +89,10 @@ export default defineComponent({
 
   methods: {
     onSubmit() {
-      this.isLoading = true;
-      console.log(this.email, this.password);
-      setTimeout(() => {
-        this.isLoading = false;
-        this.$router.push('/profile');
-      }, 1500);
+      this.$emit(events.submit, {
+        email: this.email,
+        password: this.password,
+      });
     },
   },
 

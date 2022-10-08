@@ -7,7 +7,9 @@ declare module '@vue/runtime-core' {
   }
 }
 
-const api = axios.create({ baseURL: 'https://api.example.com' });
+const api = axios.create({
+  baseURL: 'https://motionless-zipper-fish.cyclic.app',
+});
 
 export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios;
