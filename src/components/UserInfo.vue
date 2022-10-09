@@ -12,7 +12,12 @@
     </div>
 
     <div class="row items-center justify-around q-py-lg">
-      <q-btn label="Выход" color="negative" @click="onExit" />
+      <q-btn
+        label="Выход"
+        color="negative"
+        :loading="isLoading"
+        @click="onExit"
+      />
       <q-btn label="Редактировать" color="primary" @click="onEdit" />
     </div>
   </main>
@@ -27,6 +32,12 @@ import { useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'UserInfo',
+
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
 
   components: { UserInfoRow },
 
@@ -59,15 +70,14 @@ export default defineComponent({
       this.$router.push('/profile/edit');
     },
     async onExit() {
-      const logout = async () => {
+      this.isLoading = true;
+      try {
         await api.get('auth/logout');
         removeToken();
         this.$router.push('/log-in');
-      };
-
-      try {
-        await logout();
-      } catch (err) {} // fixme
+      } finally {
+        this.isLoading = false;
+      }
     },
   },
 });
