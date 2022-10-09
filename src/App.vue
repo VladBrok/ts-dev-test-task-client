@@ -12,11 +12,13 @@ export default defineComponent({
   setup() {
     window.onunhandledrejection = (e) => {
       console.log(e.reason);
-      Notify.create({
-        type: 'negative',
-        message:
-          'Не удалось подключиться к серверу. Пожалуйста, повторите попытку позже',
-      });
+      if (e.reason.response?.status !== 401) {
+        Notify.create({
+          type: 'negative',
+          message:
+            'Не удалось подключиться к серверу. Пожалуйста, повторите попытку позже',
+        });
+      }
     };
   },
 });
