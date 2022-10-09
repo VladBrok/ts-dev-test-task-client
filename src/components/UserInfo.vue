@@ -3,24 +3,15 @@
     <h1 class="q-py-sm text-h5 text-center">Добро пожаловать!</h1>
   </header>
   <main class="container">
-    <div class="grid">
-      <p class="label">Имя:</p>
-      <p>{{ name }}</p>
-
-      <p class="label">Телефон:</p>
-      <p>{{ phoneNumber }}</p>
-
-      <p class="label">Email:</p>
-      <p>{{ email }}</p>
-
-      <p class="label">Адрес:</p>
-      <p>{{ address }}</p>
-
-      <p class="label">Информация о себе:</p>
-      <p>{{ info }}</p>
+    <div class="grid" v-if="!error">
+      <user-info-row label="Имя:" :info="name" />
+      <user-info-row label="Телефон:" :info="phoneNumber" />
+      <user-info-row label="Email:" :info="email" />
+      <user-info-row label="Адрес:" :info="address" />
+      <user-info-row label="Информация о себе:" :info="info" />
     </div>
 
-    <div class="row q-gutter-xl items-center justify-center q-py-lg">
+    <div class="row items-center justify-around q-py-lg">
       <q-btn label="Выход" color="negative" @click="onExit" />
       <q-btn label="Редактировать" color="primary" @click="onEdit" />
     </div>
@@ -29,22 +20,37 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { api } from '../boot/axios';
+import UserInfoRow from './UserInfoRow.vue';
+import { removeToken } from '../lib/token';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'UserInfo',
+
+  components: { UserInfoRow },
+
   async setup() {
     // fixme: dup
-    await new Promise((res, rej) => {
-      setTimeout(() => res(''), 1500);
-    });
+    let email;
+    let userInfo;
+    let error = false;
+    const $q = useQuasar();
+
+    try {
+      const res = await api.get('users');
+      ({ email, userInfo } = res.data);
+    } catch {
+      error = true;
+    }
 
     return {
-      name: 'Влад',
-      phoneNumber: '+383838383',
-      email: 'vlad@brok.com',
-      address:
-        'Definitionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn and Usage. The word-wrap property allows long words to be able to be broken and wrap onto the next line. Show demo . Default value: normal. Inherited: yes. Animatable: no. Read about animatable.',
-      info: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa ex, consequuntur ullam assumenda provident culpa voluptatem adipisci veritatis, itaque officiis aperiam enim aliquam dolore veniam quam molestias doloribus, accusamus similique?',
+      email,
+      name: userInfo?.name,
+      phoneNumber: userInfo?.phoneNumber,
+      address: userInfo?.address,
+      info: userInfo?.info,
+      error,
     };
   },
 
@@ -52,8 +58,16 @@ export default defineComponent({
     onEdit() {
       this.$router.push('/profile/edit');
     },
-    onExit() {
-      this.$router.push('/log-in');
+    async onExit() {
+      const logout = async () => {
+        await api.get('auth/logout');
+        removeToken();
+        this.$router.push('/log-in');
+      };
+
+      try {
+        await logout();
+      } catch (err) {} // fixme
     },
   },
 });
@@ -65,14 +79,10 @@ export default defineComponent({
   grid-template-columns: max-content 1fr;
   row-gap: 0.6rem;
   column-gap: 1rem;
-}
-
-.label {
-  font-weight: 600;
+  margin-left: 10rem;
 }
 
 .container {
-  margin-left: 4rem;
   overflow-wrap: anywhere;
 }
 </style>

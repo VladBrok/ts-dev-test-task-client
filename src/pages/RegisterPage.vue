@@ -16,6 +16,7 @@ import AuthPage from 'src/components/AuthPage.vue';
 
 export default defineComponent({
   name: 'RegisterPage',
+
   data() {
     return {
       isLoading: false,

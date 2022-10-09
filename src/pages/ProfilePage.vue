@@ -1,4 +1,3 @@
-<!-- todo: protect the page -->
 <template>
   <custom-suspense>
     <user-info />
