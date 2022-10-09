@@ -24,7 +24,7 @@ const handleUnauthorized = () => {
     Notify.create({
       type: 'info',
       color: 'primary',
-      message: 'Время сеанса истекло. Пожалуйста, войдите еще раз',
+      message: 'Время сеанса истекло. Пожалуйста, войдите снова',
     });
   }
 

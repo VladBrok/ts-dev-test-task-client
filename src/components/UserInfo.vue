@@ -29,6 +29,7 @@ import { api } from '../boot/axios';
 import UserInfoRow from './UserInfoRow.vue';
 import { removeToken } from '../lib/token';
 import { useQuasar } from 'quasar';
+import { getUser } from '../lib/user';
 
 export default defineComponent({
   name: 'UserInfo',
@@ -42,18 +43,7 @@ export default defineComponent({
   components: { UserInfoRow },
 
   async setup() {
-    // fixme: dup
-    let email;
-    let userInfo;
-    let error = false;
-    const $q = useQuasar();
-
-    try {
-      const res = await api.get('users');
-      ({ email, userInfo } = res.data);
-    } catch {
-      error = true;
-    }
+    const { email, userInfo, error } = await getUser();
 
     return {
       email,

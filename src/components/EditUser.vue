@@ -1,6 +1,6 @@
 <template>
   <div class="q-mx-auto" style="max-width: 20rem">
-    <main class="q-mt-lg">
+    <main class="q-mt-lg" v-if="!error">
       <q-form @submit="onSubmit" class="q-gutter-md" novalidate>
         <q-input
           lazy-rules
@@ -67,25 +67,26 @@ import {
   getPhoneNumberRules,
 } from 'src/lib/rules';
 import { defineComponent, ref } from 'vue';
+import { api } from '../boot/axios';
+import { useQuasar } from 'quasar';
+import { getUser } from '../lib/user';
 
 export default defineComponent({
   name: 'EditUser',
+
   async setup() {
-    await new Promise((res, rej) => {
-      setTimeout(() => res(''), 1500);
-    });
+    const { email, userInfo, error } = await getUser();
+
+    const createRef = (value) => ref(value ?? '');
 
     return {
-      name: ref('Влад'),
-      phoneNumber: ref('+383838383'),
-      email: ref('vlad@brok.com'),
-      address: ref(
-        'Definitionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn and Usage. The word-wrap property allows long words to be able to be broken and wrap onto the next line. Show demo . Default value: normal. Inherited: yes. Animatable: no. Read about animatable.'
-      ),
-      info: ref(
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa ex, consequuntur ullam assumenda provident culpa voluptatem adipisci veritatis, itaque officiis aperiam enim aliquam dolore veniam quam molestias doloribus, accusamus similique?'
-      ),
-      password: ref(''),
+      email: createRef(email),
+      name: createRef(userInfo?.name),
+      phoneNumber: createRef(userInfo?.phoneNumber),
+      address: createRef(userInfo?.address),
+      info: createRef(userInfo?.info),
+      password: createRef(),
+      error,
     };
   },
 
@@ -100,7 +101,7 @@ export default defineComponent({
           persistent: true,
         })
         .onOk(() => {
-          this.$router.push('/');
+          this.$router.push('/'); // fixme
         });
     },
     onSubmit() {
