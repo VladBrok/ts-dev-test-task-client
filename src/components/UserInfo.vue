@@ -11,7 +11,7 @@
       <user-info-row label="Информация о себе:" :info="info" />
     </div>
 
-    <div class="row items-center justify-around q-py-lg">
+    <div class="row items-center justify-center q-gutter-x-xl q-py-lg">
       <q-btn
         label="Выход"
         color="negative"
@@ -79,7 +79,9 @@ export default defineComponent({
   grid-template-columns: max-content 1fr;
   row-gap: 0.6rem;
   column-gap: 1rem;
-  margin-left: 8rem;
+  margin: 0 auto;
+  width: fit-content;
+  max-width: 20rem;
 }
 
 .container {
