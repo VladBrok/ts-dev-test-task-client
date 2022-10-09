@@ -106,8 +106,14 @@ export default defineComponent({
           ok: 'ОК',
           persistent: true,
         })
-        .onOk(() => {
-          this.$router.push('/'); // fixme
+        .onOk(async () => {
+          await api.delete('users');
+          this.$q.notify({
+            type: 'info',
+            color: 'primary',
+            message: 'Аккаунт удален',
+          });
+          this.$router.push('/');
         });
     },
     async onSubmit() {

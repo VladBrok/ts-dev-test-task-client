@@ -19,6 +19,10 @@ api.interceptors.request.use((config) => {
 });
 
 const handleUnauthorized = () => {
+  if (['/log-in', '/'].indexOf(Router.currentRoute.value.fullPath) !== -1) {
+    return;
+  }
+
   if (getToken()) {
     removeToken();
     Notify.create({
@@ -27,10 +31,7 @@ const handleUnauthorized = () => {
       message: 'Время сеанса истекло. Пожалуйста, войдите снова',
     });
   }
-
-  if (['/log-in', '/'].indexOf(Router.currentRoute.value.fullPath) === -1) {
-    Router.push('/log-in');
-  }
+  Router.push('/log-in');
 };
 
 api.interceptors.response.use(
