@@ -13,6 +13,7 @@
 import { api } from 'src/boot/axios';
 import { defineComponent } from 'vue';
 import AuthPage from 'src/components/AuthPage.vue';
+import { Credentials } from 'src/components/models';
 
 export default defineComponent({
   name: 'RegisterPage',
@@ -26,8 +27,7 @@ export default defineComponent({
   components: { AuthPage },
 
   methods: {
-    // todo: remove 'any'
-    async onSubmit(credentials: any) {
+    async onSubmit(credentials: Credentials) {
       this.isLoading = true;
 
       const register = async () => {

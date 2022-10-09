@@ -13,6 +13,7 @@
 import { defineComponent } from 'vue';
 import AuthPage from 'src/components/AuthPage.vue';
 import { api } from 'src/boot/axios';
+import { Credentials } from 'src/components/models';
 
 export default defineComponent({
   name: 'LogInPage',
@@ -24,7 +25,7 @@ export default defineComponent({
 
   components: { AuthPage },
   methods: {
-    async onSubmit(credentials: any) {
+    async onSubmit(credentials: Credentials) {
       this.isLoading = true;
 
       const logIn = async () => {

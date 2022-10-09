@@ -31,6 +31,7 @@ const handleUnauthorized = () => {
       message: 'Время сеанса истекло. Пожалуйста, войдите снова',
     });
   }
+
   Router.push('/log-in');
 };
 
