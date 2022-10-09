@@ -1,6 +1,8 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
-import { getToken, setToken } from 'src/lib/token';
+import { getToken, removeToken, setToken } from 'src/lib/token';
+import Router from '../router';
+import { Notify } from 'quasar';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -16,13 +18,36 @@ api.interceptors.request.use((config) => {
   return { ...config, headers: { Authorization: `Bearer ${getToken()}` } };
 });
 
-api.interceptors.response.use((response) => {
-  const token = response.data.access_token;
-  if (token) {
-    setToken(token);
+const handleUnauthorized = () => {
+  if (getToken()) {
+    removeToken();
+    Notify.create({
+      type: 'info',
+      color: 'primary',
+      message: 'Время сеанса истекло. Пожалуйста, войдите еще раз',
+    });
   }
-  return response;
-});
+
+  Router.push('/log-in');
+};
+
+api.interceptors.response.use(
+  (response) => {
+    const token = response.data.access_token;
+    if (token) {
+      setToken(token);
+    }
+    return response;
+  },
+  (err) => {
+    if (err.response.status !== 401) {
+      Promise.reject(err);
+      return;
+    }
+
+    handleUnauthorized();
+  }
+);
 
 export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios;
