@@ -1,5 +1,8 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
+import { getToken, removeToken, setToken } from 'src/lib/token';
+import Router from '../router';
+import { Notify } from 'quasar';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -7,24 +10,50 @@ declare module '@vue/runtime-core' {
   }
 }
 
-// Be careful when using SSR for cross-request state pollution
-// due to creating a Singleton instance here;
-// If any client changes this (global) instance, it might be a
-// good idea to move this instance creation inside of the
-// "export default () => {}" function below (which runs individually
-// for each client)
-const api = axios.create({ baseURL: 'https://api.example.com' });
+const api = axios.create({
+  baseURL: 'https://motionless-zipper-fish.cyclic.app',
+});
+
+api.interceptors.request.use((config) => {
+  return { ...config, headers: { Authorization: `Bearer ${getToken()}` } };
+});
+
+const handleUnauthorized = () => {
+  if (['/log-in', '/'].indexOf(Router.currentRoute.value.fullPath) !== -1) {
+    return;
+  }
+
+  if (getToken()) {
+    removeToken();
+    Notify.create({
+      type: 'info',
+      color: 'primary',
+      message: 'Время сеанса истекло. Пожалуйста, войдите снова',
+    });
+  }
+
+  Router.push('/log-in');
+};
+
+api.interceptors.response.use(
+  (response) => {
+    const token = response.data.access_token;
+    if (token) {
+      setToken(token);
+    }
+    return response;
+  },
+  (err) => {
+    if (err.response.status === 401) {
+      handleUnauthorized();
+    }
+    throw err;
+  }
+);
 
 export default boot(({ app }) => {
-  // for use inside Vue files (Options API) through this.$axios and this.$api
-
   app.config.globalProperties.$axios = axios;
-  // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
-  //       so you won't necessarily have to import axios in each vue file
-
   app.config.globalProperties.$api = api;
-  // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
-  //       so you can easily perform requests against your app's API
 });
 
 export { api };
