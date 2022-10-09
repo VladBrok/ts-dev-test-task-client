@@ -49,7 +49,12 @@
         <div
           class="row q-gutter-y-md items-center justify-between q-mt-sm q-mb-lg"
         >
-          <q-btn label="Удалить аккаунт" color="negative" @click="onDelete" />
+          <q-btn
+            label="Удалить аккаунт"
+            color="negative"
+            @click="onDelete"
+            :loading="isDeleting"
+          />
           <q-btn
             label="Сохранить"
             type="submit"
@@ -92,12 +97,29 @@ export default defineComponent({
       info: createRef(userInfo?.info),
       password: createRef(),
       isSaving: false,
+      isDeleting: false,
       error,
     };
   },
 
   methods: {
     onDelete() {
+      const deleteAccount = async () => {
+        this.isDeleting = true;
+
+        try {
+          await api.delete('users');
+          this.$q.notify({
+            type: 'info',
+            color: 'primary',
+            message: 'Аккаунт удален',
+          });
+          this.$router.push('/');
+        } finally {
+          this.isDeleting = false;
+        }
+      };
+
       this.$q
         .dialog({
           title: 'Подтверждение',
@@ -106,15 +128,7 @@ export default defineComponent({
           ok: 'ОК',
           persistent: true,
         })
-        .onOk(async () => {
-          await api.delete('users');
-          this.$q.notify({
-            type: 'info',
-            color: 'primary',
-            message: 'Аккаунт удален',
-          });
-          this.$router.push('/');
-        });
+        .onOk(deleteAccount);
     },
     async onSubmit() {
       this.isSaving = true;
