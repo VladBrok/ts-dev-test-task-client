@@ -50,7 +50,12 @@
           class="row q-gutter-y-md items-center justify-between q-mt-sm q-mb-lg"
         >
           <q-btn label="Удалить аккаунт" color="negative" @click="onDelete" />
-          <q-btn label="Сохранить" type="submit" color="primary" />
+          <q-btn
+            label="Сохранить"
+            type="submit"
+            color="primary"
+            :loading="isSaving"
+          />
         </div>
       </q-form>
     </main>
@@ -86,6 +91,7 @@ export default defineComponent({
       address: createRef(userInfo?.address),
       info: createRef(userInfo?.info),
       password: createRef(),
+      isSaving: false,
       error,
     };
   },
@@ -104,8 +110,28 @@ export default defineComponent({
           this.$router.push('/'); // fixme
         });
     },
-    onSubmit() {
-      this.$router.push('/profile');
+    async onSubmit() {
+      this.isSaving = true;
+      const undefinedIfEmpty = (value) => value || undefined;
+
+      try {
+        await api.put('users', {
+          email: this.email,
+          name: undefinedIfEmpty(this.name),
+          phoneNumber: undefinedIfEmpty(this.phoneNumber),
+          address: undefinedIfEmpty(this.address),
+          info: undefinedIfEmpty(this.info),
+          password: undefinedIfEmpty(this.password),
+        });
+        this.$q.notify({
+          type: 'info',
+          color: 'primary',
+          message: 'Данные сохранены!',
+        });
+        this.$router.push('/profile');
+      } finally {
+        this.isSaving = false;
+      }
     },
   },
 

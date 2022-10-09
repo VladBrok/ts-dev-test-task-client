@@ -79,7 +79,7 @@ export default defineComponent({
   grid-template-columns: max-content 1fr;
   row-gap: 0.6rem;
   column-gap: 1rem;
-  margin-left: 10rem;
+  margin-left: 8rem;
 }
 
 .container {

@@ -9,13 +9,15 @@ export async function getUser() {
   try {
     const res = await api.get('users');
     ({ email, userInfo } = res.data);
-  } catch (err) {
+  } catch (err: any) {
     error = true;
-    Notify.create({
-      type: 'negative',
-      message:
-        'Не удалось получить данные. Пожалуйста, повторите попытку позже',
-    });
+    if (err.response?.status !== 401) {
+      Notify.create({
+        type: 'negative',
+        message:
+          'Не удалось получить данные. Пожалуйста, повторите попытку позже',
+      });
+    }
   }
 
   return { email, userInfo, error };

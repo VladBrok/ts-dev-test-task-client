@@ -28,7 +28,9 @@ const handleUnauthorized = () => {
     });
   }
 
-  Router.push('/log-in');
+  if (['/log-in', '/'].indexOf(Router.currentRoute.value.fullPath) === -1) {
+    Router.push('/log-in');
+  }
 };
 
 api.interceptors.response.use(
@@ -40,12 +42,10 @@ api.interceptors.response.use(
     return response;
   },
   (err) => {
-    if (err.response.status !== 401) {
-      Promise.reject(err);
-      return;
+    if (err.response.status === 401) {
+      handleUnauthorized();
     }
-
-    handleUnauthorized();
+    throw err;
   }
 );
 
